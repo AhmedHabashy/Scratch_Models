@@ -1,0 +1,123 @@
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.node-panel-container {
+  width: 200px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.right-panel {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  border-left: 1px solid #ddd;
+}
+
+.config-panel-container {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.code-panel {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.node-panel-container h3 {
+  margin-top: 0;
+}
+
+.node-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.node-button:hover {
+  background-color: #0056b3;
+}
+
+.config-panel-container h3 {
+  margin-top: 0;
+}
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.config-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.config-form input,
+.config-form select {
+  margin-bottom: 15px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.config-form button {
+  padding: 8px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.config-form button:hover {
+  background-color: #218838;
+}
+
+.delete-button {
+  padding: 8px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.code-panel h3 {
+  margin-top: 0;
+}
+
+.code-display {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  height: calc(100% - 40px);
+  margin: 0;
+}
