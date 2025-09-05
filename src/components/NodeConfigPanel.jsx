@@ -1,83 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-const NodeConfigPanel = ({ node, onDelete }) => {
-  const [config, setConfig] = useState({});
+const NodeConfigPanel = ({ node, config, onUpdateConfig }) => {
+  const [localConfig, setLocalConfig] = useState(config || {});
 
   useEffect(() => {
-    // Initialize config based on node type
-    switch (node.data.label) {
-      case 'Data Input':
-        setConfig({
-          source: 'csv',
-          filePath: '',
-          delimiter: ',',
-        });
-        break;
-      case 'Preprocessing':
-        setConfig({
-          scaling: 'none',
-          encoding: 'none',
-          missingValues: 'drop',
-        });
-        break;
-      case 'Linear Regression':
-        setConfig({
-          fitIntercept: true,
-          normalize: false,
-        });
-        break;
-      case 'Logistic Regression':
-        setConfig({
-          penalty: 'l2',
-          solver: 'lbfgs',
-          maxIter: 100,
-        });
-        break;
-      case 'Decision Tree':
-        setConfig({
-          criterion: 'gini',
-          maxDepth: null,
-          minSamplesSplit: 2,
-        });
-        break;
-      case 'Random Forest':
-        setConfig({
-          nEstimators: 100,
-          criterion: 'gini',
-          maxDepth: null,
-        });
-        break;
-      case 'SVM':
-        setConfig({
-          kernel: 'rbf',
-          C: 1.0,
-          gamma: 'scale',
-        });
-        break;
-      case 'K-Means':
-        setConfig({
-          nClusters: 8,
-          init: 'k-means++',
-          maxIter: 300,
-        });
-        break;
-      case 'Model Evaluation':
-        setConfig({
-          metrics: ['accuracy'],
-          crossValidation: false,
-          cvFolds: 5,
-        });
-        break;
-      default:
-        setConfig({});
-    }
-  }, [node]);
+    setLocalConfig(config || {});
+  }, [config]);
 
   const handleConfigChange = (key, value) => {
-    setConfig(prev => ({
-      ...prev,
-      [key]: value
-    }));
+    const newConfig = { ...localConfig, [key]: value };
+    setLocalConfig(newConfig);
+    onUpdateConfig(newConfig);
   };
 
   const renderConfigForm = () => {
@@ -87,7 +20,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
           <div className="config-form">
             <label>Source:</label>
             <select 
-              value={config.source || ''} 
+              value={localConfig.source || 'csv'} 
               onChange={(e) => handleConfigChange('source', e.target.value)}
             >
               <option value="csv">CSV File</option>
@@ -98,14 +31,14 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>File Path:</label>
             <input 
               type="text" 
-              value={config.filePath || ''} 
+              value={localConfig.filePath || ''} 
               onChange={(e) => handleConfigChange('filePath', e.target.value)} 
             />
             
             <label>Delimiter:</label>
             <input 
               type="text" 
-              value={config.delimiter || ','} 
+              value={localConfig.delimiter || ','} 
               onChange={(e) => handleConfigChange('delimiter', e.target.value)} 
             />
           </div>
@@ -116,7 +49,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
           <div className="config-form">
             <label>Scaling:</label>
             <select 
-              value={config.scaling || 'none'} 
+              value={localConfig.scaling || 'none'} 
               onChange={(e) => handleConfigChange('scaling', e.target.value)}
             >
               <option value="none">None</option>
@@ -127,7 +60,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             
             <label>Encoding:</label>
             <select 
-              value={config.encoding || 'none'} 
+              value={localConfig.encoding || 'none'} 
               onChange={(e) => handleConfigChange('encoding', e.target.value)}
             >
               <option value="none">None</option>
@@ -137,7 +70,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             
             <label>Missing Values:</label>
             <select 
-              value={config.missingValues || 'drop'} 
+              value={localConfig.missingValues || 'drop'} 
               onChange={(e) => handleConfigChange('missingValues', e.target.value)}
             >
               <option value="drop">Drop Rows</option>
@@ -153,7 +86,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>
               <input 
                 type="checkbox" 
-                checked={config.fitIntercept || true} 
+                checked={localConfig.fitIntercept !== false} 
                 onChange={(e) => handleConfigChange('fitIntercept', e.target.checked)} 
               />
               Fit Intercept
@@ -162,7 +95,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>
               <input 
                 type="checkbox" 
-                checked={config.normalize || false} 
+                checked={localConfig.normalize === true} 
                 onChange={(e) => handleConfigChange('normalize', e.target.checked)} 
               />
               Normalize
@@ -175,7 +108,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
           <div className="config-form">
             <label>Penalty:</label>
             <select 
-              value={config.penalty || 'l2'} 
+              value={localConfig.penalty || 'l2'} 
               onChange={(e) => handleConfigChange('penalty', e.target.value)}
             >
               <option value="l1">L1</option>
@@ -186,7 +119,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             
             <label>Solver:</label>
             <select 
-              value={config.solver || 'lbfgs'} 
+              value={localConfig.solver || 'lbfgs'} 
               onChange={(e) => handleConfigChange('solver', e.target.value)}
             >
               <option value="lbfgs">lbfgs</option>
@@ -198,7 +131,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Max Iterations:</label>
             <input 
               type="number" 
-              value={config.maxIter || 100} 
+              value={localConfig.maxIter || 100} 
               onChange={(e) => handleConfigChange('maxIter', parseInt(e.target.value))} 
             />
           </div>
@@ -209,7 +142,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
           <div className="config-form">
             <label>Criterion:</label>
             <select 
-              value={config.criterion || 'gini'} 
+              value={localConfig.criterion || 'gini'} 
               onChange={(e) => handleConfigChange('criterion', e.target.value)}
             >
               <option value="gini">Gini</option>
@@ -219,7 +152,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Max Depth:</label>
             <input 
               type="number" 
-              value={config.maxDepth || ''} 
+              value={localConfig.maxDepth || ''} 
               onChange={(e) => handleConfigChange('maxDepth', e.target.value ? parseInt(e.target.value) : null)} 
               placeholder="None"
             />
@@ -227,7 +160,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Min Samples Split:</label>
             <input 
               type="number" 
-              value={config.minSamplesSplit || 2} 
+              value={localConfig.minSamplesSplit || 2} 
               onChange={(e) => handleConfigChange('minSamplesSplit', parseInt(e.target.value))} 
             />
           </div>
@@ -239,13 +172,13 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Number of Estimators:</label>
             <input 
               type="number" 
-              value={config.nEstimators || 100} 
+              value={localConfig.nEstimators || 100} 
               onChange={(e) => handleConfigChange('nEstimators', parseInt(e.target.value))} 
             />
             
             <label>Criterion:</label>
             <select 
-              value={config.criterion || 'gini'} 
+              value={localConfig.criterion || 'gini'} 
               onChange={(e) => handleConfigChange('criterion', e.target.value)}
             >
               <option value="gini">Gini</option>
@@ -255,7 +188,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Max Depth:</label>
             <input 
               type="number" 
-              value={config.maxDepth || ''} 
+              value={localConfig.maxDepth || ''} 
               onChange={(e) => handleConfigChange('maxDepth', e.target.value ? parseInt(e.target.value) : null)} 
               placeholder="None"
             />
@@ -267,7 +200,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
           <div className="config-form">
             <label>Kernel:</label>
             <select 
-              value={config.kernel || 'rbf'} 
+              value={localConfig.kernel || 'rbf'} 
               onChange={(e) => handleConfigChange('kernel', e.target.value)}
             >
               <option value="linear">Linear</option>
@@ -280,13 +213,13 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <input 
               type="number" 
               step="0.1"
-              value={config.C || 1.0} 
+              value={localConfig.C || 1.0} 
               onChange={(e) => handleConfigChange('C', parseFloat(e.target.value))} 
             />
             
             <label>Gamma:</label>
             <select 
-              value={config.gamma || 'scale'} 
+              value={localConfig.gamma || 'scale'} 
               onChange={(e) => handleConfigChange('gamma', e.target.value)}
             >
               <option value="scale">Scale</option>
@@ -301,13 +234,13 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Number of Clusters:</label>
             <input 
               type="number" 
-              value={config.nClusters || 8} 
+              value={localConfig.nClusters || 8} 
               onChange={(e) => handleConfigChange('nClusters', parseInt(e.target.value))} 
             />
             
             <label>Initialization:</label>
             <select 
-              value={config.init || 'k-means++'} 
+              value={localConfig.init || 'k-means++'} 
               onChange={(e) => handleConfigChange('init', e.target.value)}
             >
               <option value="k-means++">K-Means++</option>
@@ -317,7 +250,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Max Iterations:</label>
             <input 
               type="number" 
-              value={config.maxIter || 300} 
+              value={localConfig.maxIter || 300} 
               onChange={(e) => handleConfigChange('maxIter', parseInt(e.target.value))} 
             />
           </div>
@@ -329,7 +262,7 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>Metrics:</label>
             <select 
               multiple
-              value={config.metrics || ['accuracy']} 
+              value={localConfig.metrics || []} 
               onChange={(e) => {
                 const selected = Array.from(e.target.selectedOptions, option => option.value);
                 handleConfigChange('metrics', selected);
@@ -345,18 +278,18 @@ const NodeConfigPanel = ({ node, onDelete }) => {
             <label>
               <input 
                 type="checkbox" 
-                checked={config.crossValidation || false} 
+                checked={localConfig.crossValidation === true} 
                 onChange={(e) => handleConfigChange('crossValidation', e.target.checked)} 
               />
               Cross Validation
             </label>
             
-            {config.crossValidation && (
+            {localConfig.crossValidation && (
               <>
                 <label>CV Folds:</label>
                 <input 
                   type="number" 
-                  value={config.cvFolds || 5} 
+                  value={localConfig.cvFolds || 5} 
                   onChange={(e) => handleConfigChange('cvFolds', parseInt(e.target.value))} 
                 />
               </>
@@ -373,9 +306,6 @@ const NodeConfigPanel = ({ node, onDelete }) => {
     <div className="node-config-panel">
       <h3>Configure: {node.data.label}</h3>
       {renderConfigForm()}
-      <button onClick={() => console.log('Save configuration', config)}>
-        Save Configuration
-      </button>
     </div>
   );
 };
