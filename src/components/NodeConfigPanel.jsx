@@ -41,6 +41,14 @@ const NodeConfigPanel = ({ node, config, onUpdateConfig }) => {
               value={localConfig.delimiter || ','} 
               onChange={(e) => handleConfigChange('delimiter', e.target.value)} 
             />
+            
+            <label>Target Column:</label>
+            <input 
+              type="text" 
+              value={localConfig.targetColumn || 'target'} 
+              onChange={(e) => handleConfigChange('targetColumn', e.target.value)} 
+              placeholder="Name of target column"
+            />
           </div>
         );
       
@@ -56,6 +64,7 @@ const NodeConfigPanel = ({ node, config, onUpdateConfig }) => {
               <option value="standard">StandardScaler</option>
               <option value="minmax">MinMaxScaler</option>
               <option value="robust">RobustScaler</option>
+              <option value="maxabs">MaxAbsScaler</option>
             </select>
             
             <label>Encoding:</label>
@@ -66,6 +75,7 @@ const NodeConfigPanel = ({ node, config, onUpdateConfig }) => {
               <option value="none">None</option>
               <option value="onehot">One-Hot Encoding</option>
               <option value="label">Label Encoding</option>
+              <option value="ordinal">Ordinal Encoding</option>
             </select>
             
             <label>Missing Values:</label>
@@ -76,6 +86,95 @@ const NodeConfigPanel = ({ node, config, onUpdateConfig }) => {
               <option value="drop">Drop Rows</option>
               <option value="mean">Fill with Mean</option>
               <option value="median">Fill with Median</option>
+              <option value="knn">KNN Imputer</option>
+            </select>
+            
+            <label>
+              <input 
+                type="checkbox" 
+                checked={localConfig.featureSelection === true} 
+                onChange={(e) => handleConfigChange('featureSelection', e.target.checked)} 
+              />
+              Feature Selection
+            </label>
+          </div>
+        );
+      
+      case 'Scaling':
+        return (
+          <div className="config-form">
+            <label>Scaling Method:</label>
+            <select 
+              value={localConfig.scalingMethod || 'standard'} 
+              onChange={(e) => handleConfigChange('scalingMethod', e.target.value)}
+            >
+              <option value="standard">StandardScaler</option>
+              <option value="minmax">MinMaxScaler</option>
+              <option value="robust">RobustScaler</option>
+              <option value="maxabs">MaxAbsScaler</option>
+              <option value="normalizer">Normalizer</option>
+            </select>
+          </div>
+        );
+      
+      case 'Encoding':
+        return (
+          <div className="config-form">
+            <label>Encoding Method:</label>
+            <select 
+              value={localConfig.encodingMethod || 'onehot'} 
+              onChange={(e) => handleConfigChange('encodingMethod', e.target.value)}
+            >
+              <option value="onehot">One-Hot Encoding</option>
+              <option value="label">Label Encoding</option>
+              <option value="ordinal">Ordinal Encoding</option>
+            </select>
+          </div>
+        );
+      
+      case 'Missing Values':
+        return (
+          <div className="config-form">
+            <label>Handling Method:</label>
+            <select 
+              value={localConfig.missingMethod || 'mean'} 
+              onChange={(e) => handleConfigChange('missingMethod', e.target.value)}
+            >
+              <option value="mean">Fill with Mean</option>
+              <option value="median">Fill with Median</option>
+              <option value="mode">Fill with Mode</option>
+              <option value="knn">KNN Imputer</option>
+              <option value="drop">Drop Rows</option>
+            </select>
+          </div>
+        );
+      
+      case 'Text Processing':
+        return (
+          <div className="config-form">
+            <label>Text Processing Method:</label>
+            <select 
+              value={localConfig.textMethod || 'tfidf'} 
+              onChange={(e) => handleConfigChange('textMethod', e.target.value)}
+            >
+              <option value="tfidf">TF-IDF Vectorizer</option>
+              <option value="count">Count Vectorizer</option>
+              <option value="hash">Hashing Vectorizer</option>
+            </select>
+          </div>
+        );
+      
+      case 'Dimensionality Reduction':
+        return (
+          <div className="config-form">
+            <label>Reduction Method:</label>
+            <select 
+              value={localConfig.reductionMethod || 'pca'} 
+              onChange={(e) => handleConfigChange('reductionMethod', e.target.value)}
+            >
+              <option value="pca">PCA</option>
+              <option value="svd">Truncated SVD</option>
+              <option value="kpca">Kernel PCA</option>
             </select>
           </div>
         );
@@ -297,8 +396,172 @@ const NodeConfigPanel = ({ node, config, onUpdateConfig }) => {
           </div>
         );
       
+      case 'Grid Search':
+        return (
+          <div className="config-form">
+            <label>Parameter Grid:</label>
+            <textarea 
+              value={localConfig.paramGrid || ''} 
+              onChange={(e) => handleConfigChange('paramGrid', e.target.value)} 
+              placeholder="Enter parameter grid as JSON"
+              rows="4"
+            />
+            
+            <label>Cross Validation Folds:</label>
+            <input 
+              type="number" 
+              value={localConfig.cvFolds || 5} 
+              onChange={(e) => handleConfigChange('cvFolds', parseInt(e.target.value))} 
+            />
+            
+            <label>Scoring Metric:</label>
+            <select 
+              value={localConfig.scoring || 'accuracy'} 
+              onChange={(e) => handleConfigChange('scoring', e.target.value)}
+            >
+              <option value="accuracy">Accuracy</option>
+              <option value="precision">Precision</option>
+              <option value="recall">Recall</option>
+              <option value="f1">F1 Score</option>
+              <option value="roc_auc">ROC AUC</option>
+            </select>
+          </div>
+        );
+      
+      case 'Random Search':
+        return (
+          <div className="config-form">
+            <label>Parameter Distribution:</label>
+            <textarea 
+              value={localConfig.paramDist || ''} 
+              onChange={(e) => handleConfigChange('paramDist', e.target.value)} 
+              placeholder="Enter parameter distribution as JSON"
+              rows="4"
+            />
+            
+            <label>Number of Iterations:</label>
+            <input 
+              type="number" 
+              value={localConfig.nIter || 10} 
+              onChange={(e) => handleConfigChange('nIter', parseInt(e.target.value))} 
+            />
+            
+            <label>Cross Validation Folds:</label>
+            <input 
+              type="number" 
+              value={localConfig.cvFolds || 5} 
+              onChange={(e) => handleConfigChange('cvFolds', parseInt(e.target.value))} 
+            />
+            
+            <label>Scoring Metric:</label>
+            <select 
+              value={localConfig.scoring || 'accuracy'} 
+              onChange={(e) => handleConfigChange('scoring', e.target.value)}
+            >
+              <option value="accuracy">Accuracy</option>
+              <option value="precision">Precision</option>
+              <option value="recall">Recall</option>
+              <option value="f1">F1 Score</option>
+              <option value="roc_auc">ROC AUC</option>
+            </select>
+          </div>
+        );
+      
+      case 'PCA':
+        return (
+          <div className="config-form">
+            <label>Number of Components:</label>
+            <input 
+              type="number" 
+              value={localConfig.nComponents || 2} 
+              onChange={(e) => handleConfigChange('nComponents', parseInt(e.target.value))} 
+              placeholder="Number of components to keep"
+            />
+            
+            <label>
+              <input 
+                type="checkbox" 
+                checked={localConfig.whiten === true} 
+                onChange={(e) => handleConfigChange('whiten', e.target.checked)} 
+              />
+              Whiten
+            </label>
+          </div>
+        );
+      
+      case 'Feature Selection':
+        return (
+          <div className="config-form">
+            <label>Method:</label>
+            <select 
+              value={localConfig.method || 'variance'} 
+              onChange={(e) => handleConfigChange('method', e.target.value)}
+            >
+              <option value="variance">Variance Threshold</option>
+              <option value="univariate">Univariate Selection</option>
+              <option value="recursive">Recursive Feature Elimination</option>
+            </select>
+            
+            <label>Threshold:</label>
+            <input 
+              type="number" 
+              step="0.01"
+              value={localConfig.threshold || 0.01} 
+              onChange={(e) => handleConfigChange('threshold', parseFloat(e.target.value))} 
+              placeholder="Feature selection threshold"
+            />
+          </div>
+        );
+      
+      case 'Model Comparison':
+        return (
+          <div className="config-form">
+            <label>Comparison Metrics:</label>
+            <select 
+              multiple
+              value={localConfig.metrics || ['accuracy']} 
+              onChange={(e) => {
+                const selected = Array.from(e.target.selectedOptions, option => option.value);
+                handleConfigChange('metrics', selected);
+              }}
+            >
+              <option value="accuracy">Accuracy</option>
+              <option value="precision">Precision</option>
+              <option value="recall">Recall</option>
+              <option value="f1">F1 Score</option>
+              <option value="roc_auc">ROC AUC</option>
+              <option value="mse">Mean Squared Error</option>
+              <option value="mae">Mean Absolute Error</option>
+            </select>
+            
+            <label>Visualization Type:</label>
+            <select 
+              value={localConfig.visualization || 'bar'} 
+              onChange={(e) => handleConfigChange('visualization', e.target.value)}
+            >
+              <option value="bar">Bar Chart</option>
+              <option value="radar">Radar Chart</option>
+              <option value="table">Table</option>
+            </select>
+            
+            <label>
+              <input 
+                type="checkbox" 
+                checked={localConfig.statisticalTest === true} 
+                onChange={(e) => handleConfigChange('statisticalTest', e.target.checked)} 
+              />
+              Include Statistical Significance Test
+            </label>
+          </div>
+        );
+      
       default:
-        return <p>No configuration options available for this node type.</p>;
+        return (
+          <div>
+            <p>No configuration options available for this node type.</p>
+            <p><small>Connect this node to others to see configuration options.</small></p>
+          </div>
+        );
     }
   };
 

@@ -3,10 +3,10 @@ import React from 'react';
 const nodeTypes = [
   'Data Input',
   'Preprocessing',
-  'Model Training',
   'Model Evaluation',
-  'Visualization',
-  'Export Results',
+  'Grid Search',
+  'Random Search',
+  'Model Comparison',
 ];
 
 const NodePanel = ({ onAddNode }) => {
@@ -41,6 +41,29 @@ const NodePanel = ({ onAddNode }) => {
       </button>
       <button className="node-button" onClick={() => onAddNode('K-Means')}>
         K-Means Clustering
+      </button>
+      
+      <h3>Advanced Preprocessing</h3>
+      <button className="node-button" onClick={() => onAddNode('PCA')}>
+        PCA
+      </button>
+      <button className="node-button" onClick={() => onAddNode('Feature Selection')}>
+        Feature Selection
+      </button>
+      <button className="node-button" onClick={() => onAddNode('Scaling')}>
+        Scaling
+      </button>
+      <button className="node-button" onClick={() => onAddNode('Encoding')}>
+        Encoding
+      </button>
+      <button className="node-button" onClick={() => onAddNode('Missing Values')}>
+        Missing Values
+      </button>
+      <button className="node-button" onClick={() => onAddNode('Text Processing')}>
+        Text Processing
+      </button>
+      <button className="node-button" onClick={() => onAddNode('Dimensionality Reduction')}>
+        Dimensionality Reduction
       </button>
     </div>
   );

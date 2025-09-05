@@ -2,6 +2,7 @@
   display: flex;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
 .node-panel-container {
@@ -10,6 +11,8 @@
   padding: 10px;
   border-right: 1px solid #ddd;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
@@ -29,10 +32,29 @@
   border-bottom: 1px solid #ddd;
 }
 
+.results-panel {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 .code-panel {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-panel h3 {
+  margin-top: 0;
+}
+
+.code-display {
+  flex: 1;
+  overflow: auto;
+  border-radius: 4px;
 }
 
 .node-panel-container h3 {
@@ -54,6 +76,35 @@
 
 .node-button:hover {
   background-color: #0056b3;
+}
+
+.project-controls {
+  margin-top: 10px;
+}
+
+.project-name-input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.control-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.control-button:hover {
+  background-color: #218838;
 }
 
 .config-panel-container h3 {
@@ -120,4 +171,69 @@
   font-size: 12px;
   height: calc(100% - 40px);
   margin: 0;
+}
+
+.code-display pre {
+  margin: 0;
+  padding: 0;
+  background-color: transparent !important;
+}
+
+.code-display code {
+  background-color: transparent !important;
+}
+
+.results-content {
+  font-size: 14px;
+}
+
+.result-message {
+  color: #28a745;
+  margin: 0 0 10px 0;
+}
+
+.result-error {
+  color: #dc3545;
+  margin: 0 0 10px 0;
+}
+
+.plot-container {
+  margin-top: 10px;
+}
+
+.plot-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Custom node styles */
+.custom-node {
+  background-color: #fff;
+  border: 1px solid #777;
+  border-radius: 5px;
+  padding: 10px;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.custom-node.collapsed {
+  padding: 5px 10px;
+}
+
+.custom-node:hover {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+/* Resize divider */
+.resize-divider {
+  width: 5px;
+  background-color: #ddd;
+  cursor: col-resize;
+  transition: background-color 0.2s;
+}
+
+.resize-divider:hover {
+  background-color: #999;
 }
